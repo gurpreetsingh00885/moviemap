@@ -10,3 +10,9 @@ class SearchView(generics.ListCreateAPIView):
         return Movie.objects.filter(title__icontains=self.kwargs['query'])
 
 search = SearchView.as_view()
+
+class MovieDetailView(generics.RetrieveAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+movie_detail = MovieDetailView.as_view()
