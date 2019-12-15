@@ -24,5 +24,6 @@ urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + 
     path('admin/', admin.site.urls),
     path('api/search/<str:query>/', search),
     path('api/movie/<int:pk>/', movie_detail),
-    path("", index, name="index")
+    path('', index, name="index"),
+    path('<path:p>/', index, name="index"),
 ]
