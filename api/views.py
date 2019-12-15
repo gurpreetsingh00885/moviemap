@@ -12,7 +12,3 @@ def search(request):
 		print(query)
 		#return Response({"": [paragraph.text for paragraph in paragraphs]})
 	return Response({"message": "default response"})
-
-
-from api.helpers import load_data
-load_data()
