@@ -14,3 +14,5 @@ def search(request):
 	return Response({"message": "default response"})
 
 
+from api.helpers import load_data
+load_data()
