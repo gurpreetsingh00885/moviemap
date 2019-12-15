@@ -1,10 +1,50 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
 import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+const MovieCard = (props) => {
+  const openMovieDetail = (event) => {
+    event.preventDefault();
+    props.history.push(`/movie/${props.data.id}/`);
+  };
+  return (
+    <Card style={{ marginBottom: 20 }}>
+      <Card.Body>
+        <Card.Subtitle className="mb-2 text-muted" style={{ float: 'right' }}>{props.data.release_year}</Card.Subtitle>
+        <Card.Title>{props.data.title}</Card.Title>
+          <Container>
+            <Row style={{ marginBottom: 10 }}>
+              <Col>
+                <b>Cast</b> <br/>
+                {props.data.actors.length >= 1 && <span>{props.data.actors[0].name}</span>}
+                {props.data.actors.length >= 2 && <span>{props.data.actors[0].name && ","} {props.data.actors[1].name}</span>}
+                {props.data.actors.length >= 3 && <span>{props.data.actors[1].name && ","} {props.data.actors[2].name}</span>}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <b>Director</b> <br/>
+                {props.data.director && props.data.director.name}
+              </Col>
+              <Col>
+                <b>Writer</b> <br/>
+                {props.data.writer && props.data.writer.name}
+              </Col>
+            </Row>
+          </Container>
+        <Card.Link style={{ float: 'right' }} onClick={openMovieDetail} href="">{props.data.locations.length} Locations</Card.Link>
+      </Card.Body>
+    </Card>
+  );
+}
 
 class SearchResult extends Component {
   constructor(props) {
@@ -19,16 +59,13 @@ class SearchResult extends Component {
   }
 
   search = evt => {
-    console.log("PRESS");
     this.props.history.push(`/search/${this.state.text}`, {key: this.state.text});
   }
 
   componentDidMount() {
-    axios.post('/api/search/', {
-        query: this.state.text
-      })
+    axios.get(`/api/search/${this.state.text}/`)
       .then((response) => {
-        this.setState({searching: false, data: []});
+        this.setState({searching: false, data: response.data});
         console.log(response.data);
       })
       .catch((error) => {
@@ -46,9 +83,9 @@ class SearchResult extends Component {
     }
 
     return (
-      <div>
-        <div style = {{ padding: 20, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', position: 'absolute', overflow: 'auto'}}>
-          <h1> MovieMap </h1>
+      <div style={{ textAlign: 'center' }}>
+        <div style = {{ padding: 20, margin: 'auto', display: 'inline-block', maxWidth: 640, width: '100%', textAlign: 'justify'}}>
+          <h1 style={{ textAlign: 'center' }}> MovieMap </h1>
           <InputGroup size="lg" className="mb-3" style={{ marginTop: 30, maxWidth: 600 }}>
             <FormControl
               placeholder="Enter Movie Name"
@@ -80,12 +117,7 @@ class SearchResult extends Component {
                   }
                   {
                     this.state.data.map(
-                      (paragraph, index) => (
-                        <ListGroup.Item style={{textOverflow: 'ellipsis'}} key={index}>
-                          <b> Document {index+1} </b><br/>
-                          {paragraph}
-                        </ListGroup.Item>
-                      )
+                      (movieObj, index) => <MovieCard data={movieObj} key={index} history={this.props.history}/>
                     )
                   }
                 </ListGroup>

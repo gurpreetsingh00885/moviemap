@@ -1,14 +1,12 @@
-from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-#from api.helpers import preprocess, process
-from api.models import *
-from django.db import transaction
+from api.models import Movie
+from api.serializers import MovieSerializer
+from rest_framework import generics
 
-@api_view(['POST'])
-def search(request):
-	if (request.method == 'POST'):
-		query = request.data['query'].strip().lower()
-		print(query)
-		#return Response({"": [paragraph.text for paragraph in paragraphs]})
-	return Response({"message": "default response"})
+class SearchView(generics.ListCreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+    def get_queryset(self):
+        return Movie.objects.filter(title__icontains=self.kwargs['query'])
+
+search = SearchView.as_view()

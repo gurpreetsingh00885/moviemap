@@ -19,5 +19,5 @@ from api.views import search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/search/', search),
+    path('api/search/<str:query>/', search),
 ]
