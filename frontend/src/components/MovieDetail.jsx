@@ -26,8 +26,9 @@ class MovieDetail extends Component {
             }
           })
           .catch((error) => console.log(error));
+          return 0;
         });
-        console.log(response.data);
+        return 0;
       })
       .catch((error) => {
         this.setState({searching: false})
@@ -57,6 +58,10 @@ class MovieDetail extends Component {
                 {movie.actors.length >= 2 && <span>{movie.actors[0].name && ","} {movie.actors[1].name}</span>}
                 {movie.actors.length >= 3 && <span>{movie.actors[1].name && ","} {movie.actors[2].name}</span>}
               </Col>
+              <Col>
+                <b>Distributor</b> <br/>
+                {movie.distributor && movie.distributor.name}
+              </Col>
             </Row>
             <Row>
               <Col>
@@ -81,7 +86,7 @@ class MovieDetail extends Component {
                   </Accordion.Toggle>
                   <Accordion.Collapse eventKey={index}>
                     <Card.Body>
-                      
+
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
